@@ -10,6 +10,8 @@ class_name Character extends Node2D
 @export var font_size = 55
 var character_stats: CharacterStats
 var bounding_box: Rect2i
+var hp_per_level_scaler
+var base_hp
 
 # State variables
 var attack_timer_buildup = 0
@@ -29,7 +31,8 @@ func _process(delta):
 ## Sets the stats of the character
 func set_stats(stats: CharacterStats):
 	character_stats = stats.duplicate() as CharacterStats
-	character_stats.max_hp = 10 + 5 * character_stats.level
+	character_stats.max_hp = base_hp + hp_per_level_scaler * character_stats.level
+	character_stats.current_hp = character_stats.max_hp
 
 ## Sets the character display name
 func set_character_name(character_name):
@@ -81,3 +84,23 @@ func _animate_attack():
 	tween.tween_property(sprite, "position", position_shift, shimmy_duration)
 	tween.tween_property(sprite, "position", original_position, shimmy_duration)
 	await tween.finished
+
+## Get attacked by another character
+func get_attacked(attacking_character):
+	var damage = _calculate_damage(attacking_character)
+	character_stats.current_hp -= damage
+	_update_hp_bar()
+	if character_stats.current_hp <= 0:
+		_die()
+
+## Calculate the damage done by the attacker
+func _calculate_damage(attacking_character):
+	return attacking_character.character_stats.power - character_stats.defense
+
+## Process character death
+func _die():
+	pass
+
+## Updates the hp bar
+func _update_hp_bar():
+	hp_bar.value = max(0, float(character_stats.current_hp) / character_stats.max_hp)

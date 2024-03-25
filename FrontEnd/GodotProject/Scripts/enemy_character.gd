@@ -5,6 +5,8 @@ class_name EnemyCharacter extends Character
 func _ready():
 	font_size = 30
 	attack_delay_max = 5
+	base_hp = 100
+	hp_per_level_scaler = 10
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

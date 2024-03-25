@@ -25,14 +25,14 @@ func spawn_new_enemy():
 	# Create new enemy
 	var new_enemy = enemy_scene.instantiate()
 	
-	# Set stats resource
-	new_enemy.set_stats(enemy_resource.stats)
-	
 	# Set sprite bounding box
 	new_enemy.set_sprite_bounding_box(enemy_resource.sprite_bounding_box)
 	
 	# Add to enemies
 	add_child(new_enemy)
+	
+	# Set stats resource
+	new_enemy.set_stats(enemy_resource.stats)
 	
 	# Set enemy sprite
 	new_enemy.set_sprite_frames(enemy_resource.sprite_frames)
@@ -44,6 +44,8 @@ func spawn_new_enemy():
 	new_enemy.position = enemy_marker.position
 	
 	enemy_characters.append(new_enemy)
+	
+	return new_enemy
 
 ## Randomly selects an enemy to spwan from the list of possible enemies
 func _determine_enemy_spawn() -> EnemyCharacterResource:

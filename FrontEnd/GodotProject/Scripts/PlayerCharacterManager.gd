@@ -25,14 +25,14 @@ func _create_character(twitch_username) -> Character:
 	# Set the player name
 	new_player.set_name(twitch_username)
 	
-	# Set the characters base stats
-	new_player.set_stats(new_character_stats)
-	
 	# Set the player to not be visible before joining a room
 	new_player.visible = false
 	
 	# Add child
 	add_child(new_player)
+	
+	# Set the characters base stats
+	new_player.set_stats(new_character_stats)
 	
 	# Return the created character
 	return new_player

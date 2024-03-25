@@ -17,7 +17,8 @@ var player_characters_in_room: Array[PlayerCharacter]
 func _ready():
 	# Init Enemy Manager for the room
 	_initialize_enemy_manager()
-	enemy_character_manager.spawn_new_enemy()
+	var new_enemy = enemy_character_manager.spawn_new_enemy()
+	new_enemy.attack.connect(_on_enemy_character_attack)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -68,9 +69,13 @@ func _connect_to_player_attack_signals(character):
 ## Called when a player character makes an attack
 # Attack the boss with the character
 func _on_player_character_attack(character):
-	pass
+	enemy_character_manager.enemy_characters[0].get_attacked(character)
 
 ## Progress enemy characters forward on their attack timers
 func _process_enemy_characters(delta):
 	for enemy_character in enemy_character_manager.enemy_characters:
 		enemy_character.progress_attack_timers(delta)
+
+func _on_enemy_character_attack(enemy_character):
+	for player_character in player_characters_in_room:
+		player_character.get_attacked(enemy_character)
