@@ -7,18 +7,16 @@ class_name Character extends Node2D
 @onready var hp_bar = $HPBar
 
 # Properties
-@export var font_size = 55
+@export var font_size = 16
 var character_stats: CharacterStats
 var bounding_box: Rect2i
-var hp_per_level_scaler
-var base_hp
 
 # State variables
 var attack_timer_buildup = 0
-var attack_delay_max
 
 # Signals
 signal attack
+signal death
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,13 +29,14 @@ func _process(delta):
 ## Sets the stats of the character
 func set_stats(stats: CharacterStats):
 	character_stats = stats.duplicate() as CharacterStats
-	character_stats.max_hp = base_hp + hp_per_level_scaler * character_stats.level
+	character_stats.max_hp = character_stats.base_hp +\
+	 character_stats.hp_per_level_scaler * character_stats.level
 	character_stats.current_hp = character_stats.max_hp
 
 ## Sets the character display name
 func set_character_name(character_name):
 	name_text.text = str("[center][font_size=", font_size, "]", 
-	character_name)
+	character_name.left(11))
 
 ## Sets the sprite offset
 func set_sprite_bounding_box(sprite_bounding_box: Rect2i):
@@ -56,12 +55,13 @@ func progress_attack_timers(delta):
 ## Checks if the attack timer has exceed the max, and if so, attacks
 func _check_attack_trigger(delta):
 	attack_timer_buildup += delta
-	if attack_timer_buildup >= attack_delay_max:
-		attack_timer_buildup -= attack_delay_max
+	if attack_timer_buildup >= character_stats.max_attack_delay_time:
+		attack_timer_buildup -= character_stats.max_attack_delay_time
 		_attack()
 
 ## Sends the room a signal for the attack
 func _attack():
+	# TODO Add crit damage
 	# Animate the player attack, if the player is visible
 	if visible:
 		_animate_attack()
@@ -95,12 +95,17 @@ func get_attacked(attacking_character):
 
 ## Calculate the damage done by the attacker
 func _calculate_damage(attacking_character):
-	return attacking_character.character_stats.power - character_stats.defense
+	return max(1, attacking_character.character_stats.power - character_stats.defense)
 
 ## Process character death
 func _die():
-	pass
+	death.emit(self)
 
 ## Updates the hp bar
 func _update_hp_bar():
 	hp_bar.value = max(0, float(character_stats.current_hp) / character_stats.max_hp)
+
+## Fully heals the character
+func full_heal():
+	character_stats.current_hp = character_stats.max_hp
+	_update_hp_bar()

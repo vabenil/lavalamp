@@ -127,9 +127,10 @@ offset_top = -45.0
 offset_right = 50.0
 offset_bottom = -30.0
 bbcode_enabled = true
-text = "[center]perred"
+text = "[center]Unset"
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
+z_index = 1
 sprite_frames = SubResource("SpriteFrames_vbyay")
 animation = &"idle"
 autoplay = "idle"
