@@ -120,7 +120,6 @@ region = Rect2(41, 37, 65, 9)
 
 [node name="PlayerCharacter" type="Node2D"]
 script = ExtResource("1_ues4k")
-font_size = null
 
 [node name="Name" type="RichTextLabel" parent="."]
 offset_left = -50.0
@@ -128,9 +127,10 @@ offset_top = -45.0
 offset_right = 50.0
 offset_bottom = -30.0
 bbcode_enabled = true
-text = "[center]perred"
+text = "[center]Unset"
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
+z_index = 1
 sprite_frames = SubResource("SpriteFrames_vbyay")
 animation = &"idle"
 autoplay = "idle"
@@ -140,7 +140,9 @@ offset_left = -40.0
 offset_top = -33.0
 offset_right = 40.0
 offset_bottom = -24.0
-value = 50.0
+max_value = 1.0
+step = 0.01
+value = 1.0
 texture_under = SubResource("AtlasTexture_1hwjn")
 texture_progress = SubResource("AtlasTexture_i5g06")
 texture_progress_offset = Vector2(8, 0)

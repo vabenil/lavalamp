@@ -1,11 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://gd2jxvl7ocpw"]
+[gd_scene load_steps=11 format=3 uid="uid://gd2jxvl7ocpw"]
 
 [ext_resource type="Texture2D" uid="uid://deu33m76eacn4" path="res://Assets/Backgrounds/ForestBackground.jpg" id="1_ibbxi"]
 [ext_resource type="Script" path="res://Scripts/RoomsManager.gd" id="1_oclf0"]
 [ext_resource type="Script" path="res://Scripts/Room.gd" id="2_50vxi"]
 [ext_resource type="Script" path="res://Scripts/PlayerCharacterManager.gd" id="2_hsx2l"]
-[ext_resource type="Resource" uid="uid://bqgja2rw08o3n" path="res://Resources/Saved/Enemies/green_slime.tres" id="3_8cdr5"]
+[ext_resource type="Resource" uid="uid://d113yj6o3cpkd" path="res://Resources/Saved/EnemyGroups/Forest2.tres" id="3_i6acv"]
+[ext_resource type="Resource" uid="uid://cl61u3p1mbjqr" path="res://Resources/Saved/EnemyGroups/Forest1.tres" id="3_qaqg3"]
+[ext_resource type="Resource" uid="uid://dwb0gwg603u0u" path="res://Resources/Saved/EnemyGroups/Forest3.tres" id="5_ge46l"]
 [ext_resource type="Script" path="res://Scripts/EnemyCharacterManager.gd" id="5_rqxuw"]
+[ext_resource type="Resource" uid="uid://dcg6y52cm1j05" path="res://Resources/Saved/EnemyGroups/Forest4.tres" id="6_iyid4"]
+[ext_resource type="Script" path="res://Scripts/connection_test.gd" id="10_xvfsm"]
 
 [node name="Main" type="Node2D"]
 
@@ -19,14 +23,14 @@ script = ExtResource("1_oclf0")
 
 [node name="Forest" type="Node2D" parent="RoomsManager"]
 script = ExtResource("2_50vxi")
-enemy_list = Array[Resource("res://Resources/Classes/EnemyCharacterResource.gd")]([ExtResource("3_8cdr5")])
+enemy_groups = Array[Resource("res://Resources/Classes/EnemyGroup.gd")]([ExtResource("3_qaqg3"), ExtResource("3_i6acv"), ExtResource("5_ge46l"), ExtResource("6_iyid4")])
 
 [node name="CharactersMarker" type="Marker2D" parent="RoomsManager/Forest"]
-position = Vector2(90, 200)
+position = Vector2(90, 160)
 gizmo_extents = 217.2
 
-[node name="EnemyMarker" type="Marker2D" parent="RoomsManager/Forest"]
-position = Vector2(310, 150)
+[node name="EnemySpawnMarker" type="Marker2D" parent="RoomsManager/Forest"]
+position = Vector2(310, 160)
 
 [node name="Control" type="Control" parent="RoomsManager/Forest"]
 layout_mode = 3
@@ -52,3 +56,10 @@ script = ExtResource("5_rqxuw")
 
 [node name="PlayerCharacterManager" type="Node" parent="."]
 script = ExtResource("2_hsx2l")
+
+[node name="CheckForNewPlayersTimer" type="Timer" parent="PlayerCharacterManager"]
+wait_time = 0.5
+autostart = true
+
+[node name="DiscordIntegrationConnectionTest" type="Node" parent="PlayerCharacterManager"]
+script = ExtResource("10_xvfsm")

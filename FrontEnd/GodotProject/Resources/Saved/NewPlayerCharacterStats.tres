@@ -9,3 +9,6 @@ power = 10
 wisdom = 10
 dexterity = 10
 defense = 10
+max_attack_delay_time = 2.0
+base_hp = 0
+hp_per_level_scaler = 10

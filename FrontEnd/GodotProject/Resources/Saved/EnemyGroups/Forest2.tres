@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EnemyGroup" load_steps=3 format=3 uid="uid://d113yj6o3cpkd"]
+
+[ext_resource type="Script" path="res://Resources/Classes/EnemyGroup.gd" id="1_f6po6"]
+[ext_resource type="Resource" uid="uid://kcce3t25xlyo" path="res://Resources/Saved/Enemies/EnemyCharacters/blue_slime.tres" id="2_q1fwa"]
+
+[resource]
+script = ExtResource("1_f6po6")
+enemy_types = Array[Resource("res://Resources/Classes/EnemyCharacterResource.gd")]([ExtResource("2_q1fwa")])
+enemy_counts = Array[int]([1])
