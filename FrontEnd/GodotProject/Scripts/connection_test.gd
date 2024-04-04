@@ -33,8 +33,14 @@ func _on_message_received(peer_id : int, message):
 	json.parse(message)
 	var data = json.data
 	match data.action:
-		"join":
-			add_new_player(peer_id, data.user)
+		"create_character":
+			get_parent().add_new_player(data.discord_id, data.username)
+		"join_room":
+			get_parent().add_player_to_room(data.discord_id, data.username, 
+			data.room)
+		"spend_stat_points":
+			get_parent().spend_stat_points(data.discord_id, data.username, 
+			data.stat_name, data.stat_point_amount)
 
 
 func _on_client_connected(peer_id : int):
@@ -44,11 +50,6 @@ func _on_client_connected(peer_id : int):
 func _on_client_disconnected(peer_id : int):
 	print("Client %d disconnected" % peer_id)
 	remove_player(peer_id)
-
-
-func add_new_player(peer_id : int, username : String):
-	get_parent().add_new_player(username)
-
 
 func remove_player(peer_id : int):
 	var player = players.get(peer_id)

@@ -146,3 +146,7 @@ value = 1.0
 texture_under = SubResource("AtlasTexture_1hwjn")
 texture_progress = SubResource("AtlasTexture_i5g06")
 texture_progress_offset = Vector2(8, 0)
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true

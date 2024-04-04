@@ -17,8 +17,11 @@ func _join_room(character, room_name):
 	# Fetch the room
 	var room := _get_room_reference(room_name)
 	
+	# Attach room reference to the character
+	character.active_room = room
+	
 	# Add the character to the current room
-	room.add_character(character)
+	return room.add_character(character)
 
 ## Gets a room reference based on the room name
 func _get_room_reference(room_name) -> Room:

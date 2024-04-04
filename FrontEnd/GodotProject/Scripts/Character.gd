@@ -6,17 +6,21 @@ class_name Character extends Node2D
 @onready var sprite = $Sprite
 @onready var hp_bar = $HPBar
 
+# References
+var active_room
+
 # Properties
 @export var font_size = 16
 var character_stats: CharacterStats
 var bounding_box: Rect2i
+var character_name
 
 # State variables
 var attack_timer_buildup = 0
 
 # Signals
 signal attack
-signal death
+signal on_death
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -30,13 +34,14 @@ func _process(delta):
 func set_stats(stats: CharacterStats):
 	character_stats = stats.duplicate() as CharacterStats
 	character_stats.max_hp = character_stats.base_hp +\
-	 character_stats.hp_per_level_scaler * character_stats.level
+	 character_stats.hp_per_level_scaler * (character_stats.level - 1)
 	character_stats.current_hp = character_stats.max_hp
 
 ## Sets the character display name
-func set_character_name(character_name):
+func set_character_name(_character_name):
+	character_name = _character_name
 	name_text.text = str("[center][font_size=", font_size, "]", 
-	character_name.left(11))
+	_character_name.left(11))
 
 ## Sets the sprite offset
 func set_sprite_bounding_box(sprite_bounding_box: Rect2i):
@@ -99,7 +104,7 @@ func _calculate_damage(attacking_character):
 
 ## Process character death
 func _die():
-	death.emit(self)
+	on_death.emit(self)
 
 ## Updates the hp bar
 func _update_hp_bar():
@@ -109,3 +114,7 @@ func _update_hp_bar():
 func full_heal():
 	character_stats.current_hp = character_stats.max_hp
 	_update_hp_bar()
+
+func leave_room():
+	active_room.leave(self)
+	active_room = null

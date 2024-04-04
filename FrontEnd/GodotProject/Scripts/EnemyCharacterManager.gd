@@ -19,6 +19,7 @@ var enemy_spawn_marker
 
 # State varibales
 var enemy_characters: Array[EnemyCharacter]
+var player_count = 0
 
 # Signals
 signal character_attacked
@@ -32,8 +33,8 @@ func _process(delta):
 	pass
 
 ## Spawns a group of enemies
-func spawn_new_group():
-	var enemy_group = _determine_enemy_group_spawn()
+func spawn_new_group(is_first_spawn=false):
+	var enemy_group = _determine_enemy_group_spawn(is_first_spawn)
 	var total_enemies = 0
 	for enemy_count in enemy_group.enemy_counts:
 		total_enemies += enemy_count
@@ -55,6 +56,9 @@ func _spawn_new_enemy(enemy_resource, total_enemies):
 	# Set stats resource
 	new_enemy.set_stats(enemy_resource.stats)
 	
+	# Set player count
+	new_enemy.set_player_count(player_count)
+	
 	# Set if new enemy is a boss type
 	new_enemy.is_boss = enemy_resource.is_boss
 	
@@ -75,8 +79,11 @@ func _spawn_new_enemy(enemy_resource, total_enemies):
 	return new_enemy
 
 ## Randomly selects an enemy to spwan from the list of possible enemies
-func _determine_enemy_group_spawn() -> EnemyGroup:
-	return enemy_groups.pick_random()
+func _determine_enemy_group_spawn(is_first_spawn) -> EnemyGroup:
+	if is_first_spawn:
+		return enemy_groups[0]
+	else:
+		return enemy_groups.pick_random()
 
 ## Sets the rooms enemy list to spawn from
 func set_enemy_groups(_enemy_groups):
@@ -84,7 +91,7 @@ func set_enemy_groups(_enemy_groups):
 
 func _connect_to_signals(new_enemy):
 	new_enemy.attack.connect(_on_enemy_attacked)
-	new_enemy.death.connect(_on_enemy_died)
+	new_enemy.on_death.connect(_on_enemy_died)
 
 func _on_enemy_attacked(enemy):
 	character_attacked.emit(enemy)
@@ -132,3 +139,18 @@ func _on_enemy_died(enemy: EnemyCharacter):
 ## Checks if all enemies in the room are cleared
 func _check_if_all_enemies_cleared():
 	return enemy_characters.size() == 0
+
+func update_player_count(new_player_count):
+	player_count = new_player_count
+	for enemy_character in enemy_characters:
+		enemy_character.update_player_count(new_player_count)
+
+func despawn_enemies():	
+	for enemy in get_children():
+		# Remove from list of enemies
+		for index in range(enemy_characters.size()):
+			if enemy_characters[index].name == enemy.name:
+				enemy_characters.remove_at(index)
+				break
+		enemy.queue_free()
+		remove_child(enemy)

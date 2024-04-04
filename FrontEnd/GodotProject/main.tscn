@@ -57,6 +57,10 @@ script = ExtResource("5_rqxuw")
 [node name="PlayerCharacterManager" type="Node" parent="."]
 script = ExtResource("2_hsx2l")
 
+[node name="AutosaveTimer" type="Timer" parent="PlayerCharacterManager"]
+wait_time = 10.0
+autostart = true
+
 [node name="CheckForNewPlayersTimer" type="Timer" parent="PlayerCharacterManager"]
 wait_time = 0.5
 autostart = true

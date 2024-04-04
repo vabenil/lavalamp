@@ -2,6 +2,8 @@ class_name EnemyCharacter extends Character
 
 # Properties
 var is_boss
+var player_hp_scaler = 1.5
+var max_seen_players = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -38,3 +40,21 @@ func _add_attack_timer_noise():
 func _attack():
 	super()
 	_add_attack_timer_noise()
+
+func update_player_count(player_count):
+	if player_count <= 1:
+		return
+	elif player_count <= max_seen_players:
+		return
+	else:
+		character_stats.max_hp =  character_stats.max_hp * pow(player_hp_scaler, player_count - max_seen_players)
+		character_stats.current_hp = character_stats.current_hp * pow(player_hp_scaler, player_count - max_seen_players)
+		max_seen_players = player_count
+			
+func set_player_count(player_count):
+	max_seen_players = player_count
+	if player_count <= 1:
+		return
+	else:
+		character_stats.max_hp = character_stats.max_hp  * pow(player_hp_scaler, player_count)
+		full_heal()
